@@ -58,7 +58,7 @@ public class SendMsg extends javax.swing.JFrame {
 
         buttonGroup1.add(TextJRB);
         TextJRB.setSelected(true);
-        TextJRB.setText("文本");
+        TextJRB.setText("Text");
 
         buttonGroup1.add(bytesJRB);
         bytesJRB.setText("byte[]");
@@ -67,14 +67,19 @@ public class SendMsg extends javax.swing.JFrame {
         contentJTA.setRows(5);
         jScrollPane1.setViewportView(contentJTA);
 
-        sendBTN.setText("发送");
+        sendBTN.setText("send");
         sendBTN.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 sendBTNMouseReleased(evt);
             }
         });
+        sendBTN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendBTNActionPerformed(evt);
+            }
+        });
 
-        jButton1.setText("关闭");
+        jButton1.setText("close");
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 jButton1MouseReleased(evt);
@@ -191,6 +196,10 @@ public class SendMsg extends javax.swing.JFrame {
     private void sExchangeNameJTFKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_sExchangeNameJTFKeyPressed
         // TODO add your handling code here:
     }//GEN-LAST:event_sExchangeNameJTFKeyPressed
+
+    private void sendBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendBTNActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_sendBTNActionPerformed
 
     private void setKeyMask(JTextComponent jtf) {
         int MASK = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();

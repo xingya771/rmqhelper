@@ -99,7 +99,7 @@ public class MainFrame extends javax.swing.JFrame {
         msgTable.setModel(tableModel);
         jScrollPane1.setViewportView(msgTable);
 
-        beginlistenBT.setText("开始侦听");
+        beginlistenBT.setText("connect");
         beginlistenBT.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 beginlistenBTMouseReleased(evt);
@@ -110,7 +110,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         buttonGroup1.add(textJRB);
         textJRB.setSelected(true);
-        textJRB.setText("文本");
+        textJRB.setText("Text");
         textJRB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textJRBActionPerformed(evt);
@@ -125,7 +125,7 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        clearBN.setText("清空");
+        clearBN.setText("clear");
         clearBN.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 clearBNMouseReleased(evt);
