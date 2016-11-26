@@ -8,20 +8,18 @@ package com.ojdbc.rmqhelper.ui;
 import com.ojdbc.rmqhelper.rmq.DefaultConsumer;
 import com.ojdbc.rmqhelper.rmq.Helper;
 import com.ojdbc.rmqhelper.rmq.MsgBean;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollBar;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import javax.swing.text.JTextComponent;
-import sun.tools.jar.resources.jar;
 
 /**
  *
@@ -77,6 +75,11 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel1.setText(":");
 
         ipJTF.setText("127.0.0.1");
+        ipJTF.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                ipJTFFocusGained(evt);
+            }
+        });
 
         userNameJTF.setText("test");
 
@@ -89,14 +92,26 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel4.setText("ExchangeName");
 
         exchangeNameJTF.setText("test");
+        exchangeNameJTF.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                exchangeNameJTFFocusGained(evt);
+            }
+        });
 
         jLabel5.setText("RoutingKey");
 
         routingKeyJTF.setText("#");
+        routingKeyJTF.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                routingKeyJTFFocusGained(evt);
+            }
+        });
 
         jScrollPane1.setAutoscrolls(true);
 
+        msgTable.setAutoCreateRowSorter(true);
         msgTable.setModel(tableModel);
+        msgTable.setColumnSelectionAllowed(true);
         jScrollPane1.setViewportView(msgTable);
 
         beginlistenBT.setText("connect");
@@ -107,6 +122,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
 
         exchangeTypeItem.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "direct", "topic", "fanout" }));
+        exchangeTypeItem.setSelectedIndex(1);
 
         buttonGroup1.add(textJRB);
         textJRB.setSelected(true);
@@ -129,6 +145,11 @@ public class MainFrame extends javax.swing.JFrame {
         clearBN.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 clearBNMouseReleased(evt);
+            }
+        });
+        clearBN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearBNActionPerformed(evt);
             }
         });
 
@@ -234,19 +255,19 @@ public class MainFrame extends javax.swing.JFrame {
         if (isStop) {
             DefaultConsumer.stop();
             checkFlag = false;
-            beginlistenBT.setText("开始侦听");
+            beginlistenBT.setText("connect");
             isStop = false;
         } else {
             beginListen();
-            beginlistenBT.setText("停止侦听");
+            beginlistenBT.setText("disconnect");
 
         }
 
     }//GEN-LAST:event_beginlistenBTMouseReleased
 
     private void clearBNMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clearBNMouseReleased
-        msgList.clear();
-        msgTable.setModel(new MsgTableModel(msgList));
+        clearTable();
+
     }//GEN-LAST:event_clearBNMouseReleased
 
     private void sendContentBtMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sendContentBtMouseReleased
@@ -270,6 +291,28 @@ public class MainFrame extends javax.swing.JFrame {
     private void bytesJRBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bytesJRBActionPerformed
         isText = false;
     }//GEN-LAST:event_bytesJRBActionPerformed
+
+    private void clearBNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearBNActionPerformed
+        clearTable();
+
+    }//GEN-LAST:event_clearBNActionPerformed
+
+    private void ipJTFFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_ipJTFFocusGained
+        ipJTF.selectAll();
+    }//GEN-LAST:event_ipJTFFocusGained
+
+    private void exchangeNameJTFFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_exchangeNameJTFFocusGained
+        exchangeNameJTF.selectAll();
+    }//GEN-LAST:event_exchangeNameJTFFocusGained
+
+    private void routingKeyJTFFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_routingKeyJTFFocusGained
+        routingKeyJTF.selectAll();
+    }//GEN-LAST:event_routingKeyJTFFocusGained
+
+    private void clearTable() {
+        tableModel.setRowCount(0);
+        DefaultConsumer.resetSeq();
+    }
 
     private void setKeyMask(JTextComponent jtf) {
         int MASK = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
@@ -350,7 +393,7 @@ public class MainFrame extends javax.swing.JFrame {
             while (checkFlag) {
                 if (!DefaultConsumer.checkConnect()) {
                     checkFlag = false;
-                    beginlistenBT.setText("开始侦听");
+                    beginlistenBT.setText("connect");
                     isStop = false;
                 }
                 try {
@@ -385,10 +428,7 @@ public class MainFrame extends javax.swing.JFrame {
                     }
                     continue;
                 }
-                MsgBean msg = DefaultConsumer.msgQueue.poll();
-                msgList.add(msg);
-                tableModel.addRow(new Object[]{msg.getSeq(), msg.getRoutingKey(), msg.getBody()});
-                setCoWidth();
+                addNewRow();
             }
         });
 
@@ -416,14 +456,27 @@ public class MainFrame extends javax.swing.JFrame {
 
     }
 
+    private void addNewRow() {
+        MsgBean msg = DefaultConsumer.msgQueue.poll();
+        tableModel.addRow(new Object[]{msg.getSeq(), msg.getRoutingKey(), msg.getBody()});
+        setCoWidth();
+        int rowCount = msgTable.getRowCount();
+        msgTable.getSelectionModel().setSelectionInterval(rowCount - 1, rowCount - 1);
+        Rectangle rect = msgTable.getCellRect(rowCount - 1, 0, true);
+        
+        //msgTable.repaint(); //若需要的话
+        msgTable.updateUI();//若需要的话
+        msgTable.scrollRectToVisible(rect);
+        
+    }
+
     private void setCoWidth() {
         msgTable.getColumnModel().getColumn(0).setMaxWidth(100);
         msgTable.getColumnModel().getColumn(1).setPreferredWidth(300);
-        msgTable.getColumnModel().getColumn(2).setPreferredWidth(600);
+        msgTable.getColumnModel().getColumn(2).setPreferredWidth(800);
 
     }
 
-    private List<MsgBean> msgList = new java.util.concurrent.CopyOnWriteArrayList<>();
     private boolean checkFlag = true;
     private boolean runFlag = true;
     private boolean isStop = false;

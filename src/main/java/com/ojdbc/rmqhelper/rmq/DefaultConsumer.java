@@ -37,6 +37,10 @@ public class DefaultConsumer {
         connect();
         isStart.countDown();
     }
+    
+    public static void resetSeq(){
+        atomicLong.set(1);
+    }
 
     public static void connect() {
         try {
@@ -46,7 +50,7 @@ public class DefaultConsumer {
             String queueName = channel.queueDeclare().getQueue();
             channel.queueBind(queueName, Helper.getExchangeName(), Helper.getRouterKey());
             channel.basicConsume(queueName, true, new MyConsumer());
-            atomicLong.set(0);
+            atomicLong.set(1);
         } catch (Exception e) {
             logQueue.add(StackUtil.getStackTrace(e));
             e.printStackTrace();
