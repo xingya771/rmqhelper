@@ -14,14 +14,12 @@ import java.io.UnsupportedEncodingException;
  */
 public class MsgBean {
 
-    private long seq = 0;
     private String routingKey;
     private byte[] body;
 
-    public MsgBean(String routingKey, byte[] body, long seq) {
+    public MsgBean(String routingKey, byte[] body) {
         this.routingKey = routingKey;
         this.body = body;
-        this.seq = seq;
     }
 
     public String getRoutingKey() {
@@ -52,12 +50,5 @@ public class MsgBean {
         this.body = body;
     }
 
-    public long getSeq() {
-        return seq;
-    }
-
-    public void setSeq(long seq) {
-        this.seq = seq;
-    }
 
 }

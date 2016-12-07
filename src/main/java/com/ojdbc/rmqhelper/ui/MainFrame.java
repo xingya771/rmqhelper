@@ -311,7 +311,6 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void clearTable() {
         tableModel.setRowCount(0);
-        DefaultConsumer.resetSeq();
     }
 
     private void setKeyMask(JTextComponent jtf) {
@@ -458,9 +457,10 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void addNewRow() {
         MsgBean msg = DefaultConsumer.msgQueue.poll();
-        tableModel.addRow(new Object[]{msg.getSeq(), msg.getRoutingKey(), msg.getBody()});
-        setCoWidth();
         int rowCount = msgTable.getRowCount();
+        tableModel.addRow(new Object[]{rowCount+1, msg.getRoutingKey(), msg.getBody()});
+        setCoWidth();
+        
         msgTable.getSelectionModel().setSelectionInterval(rowCount - 1, rowCount - 1);
         Rectangle rect = msgTable.getCellRect(rowCount - 1, 0, true);
         
@@ -474,7 +474,6 @@ public class MainFrame extends javax.swing.JFrame {
         msgTable.getColumnModel().getColumn(0).setMaxWidth(100);
         msgTable.getColumnModel().getColumn(1).setPreferredWidth(300);
         msgTable.getColumnModel().getColumn(2).setPreferredWidth(800);
-
     }
 
     private boolean checkFlag = true;

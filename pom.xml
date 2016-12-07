@@ -17,22 +17,33 @@
             <version>3.6.5</version>
         </dependency>
     </dependencies>
-    <build>
-      <plugins>
+   
+  <build>
+    <finalName>RabbitMQHelper</finalName>
+    <plugins>
       <plugin>  
-        <groupId>org.apache.maven.plugins</groupId>  
-        <artifactId>maven-jar-plugin</artifactId>  
-        <version>3.0.2</version>  
+        <artifactId>maven-assembly-plugin</artifactId>  
         <configuration>  
+            <appendAssemblyId>false</appendAssemblyId>  
+            <descriptorRefs>  
+                <descriptorRef>jar-with-dependencies</descriptorRef>  
+            </descriptorRefs>  
             <archive>  
                 <manifest>  
-                    <addClasspath>true</addClasspath>  
-                    <classpathPrefix>lib/</classpathPrefix>  
                     <mainClass>com.ojdbc.rmqhelper.Main</mainClass>  
                 </manifest>  
             </archive>  
         </configuration>  
+        <executions>  
+            <execution>  
+                <id>make-assembly</id>  
+                <phase>package</phase>  
+                <goals>  
+                    <goal>assembly</goal>  
+                </goals>  
+            </execution>  
+        </executions>  
       </plugin>
-     </plugins> 
+    </plugins>
   </build>
 </project>

@@ -31,16 +31,13 @@ public class DefaultConsumer {
     public static ConcurrentLinkedQueue<MsgBean> msgQueue = new ConcurrentLinkedQueue<>();
     public static ConcurrentLinkedQueue<String> logQueue = new ConcurrentLinkedQueue<>();
     public static CountDownLatch isStart = new CountDownLatch(1);
-    public static AtomicLong atomicLong=new AtomicLong();
     public static void init() {
         isStart = new CountDownLatch(1);
         connect();
         isStart.countDown();
     }
     
-    public static void resetSeq(){
-        atomicLong.set(1);
-    }
+   
 
     public static void connect() {
         try {
@@ -50,7 +47,6 @@ public class DefaultConsumer {
             String queueName = channel.queueDeclare().getQueue();
             channel.queueBind(queueName, Helper.getExchangeName(), Helper.getRouterKey());
             channel.basicConsume(queueName, true, new MyConsumer());
-            atomicLong.set(1);
         } catch (Exception e) {
             logQueue.add(StackUtil.getStackTrace(e));
             e.printStackTrace();
@@ -85,7 +81,7 @@ public class DefaultConsumer {
     }
 
     public static void handlerMsg(String routingKey,byte[] body) throws IOException {
-        msgQueue.add(new MsgBean(routingKey, body,atomicLong.getAndIncrement()));
+        msgQueue.add(new MsgBean(routingKey, body));
     }
 
     private static class MyConsumer implements Consumer {
