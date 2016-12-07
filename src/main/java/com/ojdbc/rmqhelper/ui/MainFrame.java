@@ -463,9 +463,6 @@ public class MainFrame extends javax.swing.JFrame {
         
         msgTable.getSelectionModel().setSelectionInterval(rowCount - 1, rowCount - 1);
         Rectangle rect = msgTable.getCellRect(rowCount - 1, 0, true);
-        
-        //msgTable.repaint(); //若需要的话
-        msgTable.updateUI();//若需要的话
         msgTable.scrollRectToVisible(rect);
         
     }
