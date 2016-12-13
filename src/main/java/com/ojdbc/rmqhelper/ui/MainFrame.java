@@ -8,6 +8,8 @@ package com.ojdbc.rmqhelper.ui;
 import com.ojdbc.rmqhelper.rmq.DefaultConsumer;
 import com.ojdbc.rmqhelper.rmq.Helper;
 import com.ojdbc.rmqhelper.rmq.MsgBean;
+import static com.ojdbc.util.StringUtil.jsonFormatter;
+import static com.ojdbc.util.UIUtil.setKeyMask;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
@@ -17,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollBar;
+import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
@@ -108,6 +111,11 @@ public class MainFrame extends javax.swing.JFrame {
         });
 
         jScrollPane1.setAutoscrolls(true);
+        jScrollPane1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jScrollPane1MouseClicked(evt);
+            }
+        });
 
         msgTable.setAutoCreateRowSorter(true);
         msgTable.setModel(tableModel);
@@ -309,16 +317,22 @@ public class MainFrame extends javax.swing.JFrame {
         routingKeyJTF.selectAll();
     }//GEN-LAST:event_routingKeyJTFFocusGained
 
+    private void jScrollPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jScrollPane1MouseClicked
+      if (evt.getClickCount() == 2) {
+            int row = ((JTable) evt.getSource()).rowAtPoint(evt.getPoint());
+            int col = ((JTable) evt.getSource()).columnAtPoint(evt.getPoint());
+            Object obj = msgTable.getModel().getValueAt(row, col);
+            if (obj != null) {
+                
+                ShowDetailDialog showDetailDialog = new ShowDetailDialog(null, true, jsonFormatter(obj.toString()));
+                showDetailDialog.setVisible(true);
+            }
+
+        }
+    }//GEN-LAST:event_jScrollPane1MouseClicked
+
     private void clearTable() {
         tableModel.setRowCount(0);
-    }
-
-    private void setKeyMask(JTextComponent jtf) {
-        int MASK = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-        jtf.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_A, MASK), "select-all");
-        jtf.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_C, MASK), "copy");
-        jtf.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_X, MASK), "cut");
-        jtf.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_V, MASK), "paste");
     }
 
     /**
