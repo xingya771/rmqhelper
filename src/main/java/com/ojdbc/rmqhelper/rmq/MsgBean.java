@@ -41,6 +41,9 @@ public class MsgBean {
             for (byte b : body) {
                 sb.append(b).append(",");
             }
+            if(sb.length()==0){
+                return "";
+            }
             return sb.substring(0, sb.length() - 1);
         }
         return "";

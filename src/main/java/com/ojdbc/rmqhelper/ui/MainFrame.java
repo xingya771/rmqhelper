@@ -120,6 +120,11 @@ public class MainFrame extends javax.swing.JFrame {
         msgTable.setAutoCreateRowSorter(true);
         msgTable.setModel(tableModel);
         msgTable.setColumnSelectionAllowed(true);
+        msgTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                msgTableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(msgTable);
 
         beginlistenBT.setText("connect");
@@ -331,6 +336,19 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jScrollPane1MouseClicked
 
+    private void msgTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_msgTableMouseClicked
+        if (evt.getClickCount() == 2) {
+            int row = ((JTable) evt.getSource()).rowAtPoint(evt.getPoint());
+            int col = ((JTable) evt.getSource()).columnAtPoint(evt.getPoint());
+            Object obj = msgTable.getModel().getValueAt(row, col);
+            if (obj != null) {
+                ShowDetailDialog showDetailDialog = new ShowDetailDialog(null, true, jsonFormatter(obj.toString()));
+                showDetailDialog.setVisible(true);
+            }
+
+        } 
+    }//GEN-LAST:event_msgTableMouseClicked
+
     private void clearTable() {
         tableModel.setRowCount(0);
     }
@@ -491,7 +509,11 @@ public class MainFrame extends javax.swing.JFrame {
     private boolean runFlag = true;
     private boolean isStop = false;
     public static boolean isText = true;
-    DefaultTableModel tableModel = new DefaultTableModel();
+    DefaultTableModel tableModel = new DefaultTableModel() {
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton beginlistenBT;
     private javax.swing.ButtonGroup buttonGroup1;
