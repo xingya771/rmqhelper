@@ -29,7 +29,6 @@ public class MsgBean {
     public void setRoutingKey(String routingKey) {
         this.routingKey = routingKey;
     }
-
     public String getBody() {
         if (MainFrame.isText) {
             try {

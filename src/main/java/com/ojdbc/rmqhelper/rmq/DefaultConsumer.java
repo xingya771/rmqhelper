@@ -80,7 +80,7 @@ public class DefaultConsumer {
         }
     }
 
-    public static void handlerMsg(String routingKey,byte[] body) throws IOException {
+    public static void handlerMsg(String routingKey,byte[] body, AMQP.BasicProperties properties) throws IOException {
         msgQueue.add(new MsgBean(routingKey, body));
     }
 
@@ -112,7 +112,7 @@ public class DefaultConsumer {
 
         @Override
         public void handleDelivery(String consumerTag, Envelope env, AMQP.BasicProperties properties, byte[] body) throws IOException {
-            handlerMsg(env.getRoutingKey(),body);
+            handlerMsg(env.getRoutingKey(),body,properties);
         }
     }
 }
